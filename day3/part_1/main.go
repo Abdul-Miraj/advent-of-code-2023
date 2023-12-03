@@ -1,11 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
+
+	"aoc2023/utils"
 )
 
 var input = "../input.txt"
@@ -15,17 +14,14 @@ type partLocation struct {
 	col int
 }
 
-var total int
+var (
+	total   int
+	visited = utils.NewSet[[2]int]()
+)
 
 func main() {
-	file, err := os.Open(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	scanner, file := utils.GetScanner(input)
 	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
 
 	var schematic [][]string
 	var pLoc []partLocation
@@ -62,13 +58,11 @@ func main() {
 func checkNeighbors(row int, col int, schematic [][]string) int {
 	directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
 
-	visited := map[[2]int]any{}
-
 	for _, d := range directions {
 		cRow := row + d[0]
 		cCol := col + d[1]
 
-		if _, ok := visited[[2]int{cRow, cCol}]; ok {
+		if visited.Exists([2]int{cRow, cCol}) {
 			continue
 		}
 
@@ -84,17 +78,17 @@ func checkNeighbors(row int, col int, schematic [][]string) int {
 		}
 
 		// fmt.Println(fmt.Sprintf("%d, %d, %s", cRow, cCol, symbol))
-		n := scanForNumber(cRow, cCol, schematic, visited)
+		n := scanForNumber(cRow, cCol, schematic)
 
 		total += n
 
-		fmt.Println(fmt.Sprintf("Symbol: %s, Num: %d, Total %d", schematic[row][col], n, total))
+		fmt.Printf("Symbol: %s, Num: %d, Total %d\n", schematic[row][col], n, total)
 	}
 
 	return total
 }
 
-func scanForNumber(row, col int, schematic [][]string, visited map[[2]int]any) int {
+func scanForNumber(row, col int, schematic [][]string) int {
 	for col > -1 {
 		_, err := strconv.Atoi(schematic[row][col])
 		if err != nil {
@@ -119,7 +113,7 @@ func scanForNumber(row, col int, schematic [][]string, visited map[[2]int]any) i
 		}
 
 		potNum += schematic[row][col]
-		visited[[2]int{row, col}] = struct{}{}
+		visited.Add([2]int{row, col})
 		col++
 	}
 
