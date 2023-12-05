@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strconv"
 )
 
 func GetScanner(fileLoc string) (*bufio.Scanner, *os.File) {
@@ -19,8 +20,8 @@ type Set[T comparable] struct {
 	data map[T]struct{}
 }
 
-func NewSet[T comparable](insertValues ...T) Set[T] {
-	s := Set[T]{
+func NewSet[T comparable](insertValues ...T) *Set[T] {
+	s := &Set[T]{
 		data: map[T]struct{}{},
 	}
 
@@ -43,4 +44,27 @@ func (s *Set[T]) Exists(key T) bool {
 
 func (s *Set[T]) Delete(key T) {
 	delete(s.data, key)
+}
+
+func (s *Set[T]) Intersection(s2 *Set[T]) *Set[T] {
+	res := NewSet[T]()
+	for k := range s.data {
+		if ok := s2.Exists(k); ok {
+			res.Add(k)
+		}
+	}
+
+	return res
+}
+
+func (s *Set[T]) Len() int {
+	return len(s.data)
+}
+
+func IsNumber(s string) (int, bool) {
+	v, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, false
+	}
+	return v, true
 }
