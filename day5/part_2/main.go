@@ -41,8 +41,6 @@ func main() {
 
 	}
 
-	fmt.Println(seeds)
-
 	var alamanc [][]alamancTranslation
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -113,11 +111,7 @@ func main() {
 				}
 			}
 
-			fmt.Println(partitionSeeds)
-			fmt.Println(processedSeeds)
 			partitionSeeds = partitionSeeds.Union(processedSeeds)
-			fmt.Println(partitionSeeds)
-			fmt.Println("========")
 
 			for _, s := range partitionSeeds.Slice() {
 				if t.lower <= s.lower && s.upper <= t.upper {
@@ -140,6 +134,5 @@ func main() {
 			min = s.lower
 		}
 	}
-	fmt.Println(processedSeeds)
 	fmt.Println(min)
 }
