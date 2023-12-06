@@ -57,8 +57,29 @@ func (s *Set[T]) Intersection(s2 *Set[T]) *Set[T] {
 	return res
 }
 
+func (s *Set[T]) Union(s2 *Set[T]) *Set[T] {
+	res := NewSet[T]()
+	for key := range s2.data {
+		res.Add(key)
+	}
+	for key := range s.data {
+		res.Add(key)
+	}
+
+	return res
+}
+
 func (s *Set[T]) Len() int {
 	return len(s.data)
+}
+
+func (s *Set[T]) Slice() []T {
+	var res []T
+	for k := range s.data {
+		res = append(res, k)
+	}
+
+	return res
 }
 
 func IsNumber(s string) (int, bool) {
