@@ -1,22 +1,14 @@
 package main
 
 import (
-	"bufio"
-	"log"
-	"os"
+	"aoc2023/utils"
 )
 
 var input = "../input.txt"
 
 func main() {
-	file, err := os.Open(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	scanner, file := utils.GetScanner(input)
 	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
 	}
